@@ -1,20 +1,21 @@
 <?xml version="1.0"?>
 <extension key="ca.freeform.groupmembership" type="module">
   <file>groupmembership</file>
-  <name>FIXME</name>
-  <description>FIXME</description>
-  <license>FIXME</license>
+  <name>Group Membership</name>
+  <description>Provides a panel for adding additional members to a membership at the time of membership purchase. Primarily designed for family memberships.</description>
+  <license>GPL v3</license>
   <maintainer>
-    <author>FIXME</author>
-    <email>FIXME@example.com</email>
+    <author>Lola Slade</author>
+    <email>lola@freeform.ca</email>
   </maintainer>
-  <releaseDate>2013-12-09</releaseDate>
-  <version>1.0</version>
+  <releaseDate>2013-12-31</releaseDate>
+  <version>0.5</version>
   <develStage>alpha</develStage>
   <compatibility>
-    <ver>4.2</ver>
+    <ver>4.3</ver>
+    <ver>4.4</ver>
   </compatibility>
-  <comments>This is a new, undeveloped module</comments>
+  <comments>Feedback welcomed especially from Wordpress and Joomla users. Please file an issue on github for any problems you encounter.</comments>
   <civix>
     <namespace>CRM/Groupmembership</namespace>
   </civix>
