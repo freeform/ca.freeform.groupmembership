@@ -1,9 +1,10 @@
-Group Membership Extension (ca.freeform.groupmembership)
-=========================================================
+Group Membership Extension
+======
+(ca.freeform.groupmembership)
 
 Provides a panel for adding additional members to a membership at the time of membership purchase. Primarily designed for family memberships.
 
-*Setup*
+Setup
 ---------
 
 Install and activate this module.
@@ -12,9 +13,10 @@ You will find the general settings at "Administer >> CiviMember >> Group Members
 http://{yoursite.corg}/civicrm/groupmembership/settings?reset=1.
 
 You need to choose:
-# The membership type to apply this extension to
-# The profile you want to use for adding additional family members
-# The membership page(s) to show the panel on
+
+1. The membership type to apply this extension to
+2. The profile you want to use for adding additional family members
+3. The membership page(s) to show the panel on
 
 The membership type needs to have a relationship type selected on its settings page. The profile must:
 
@@ -24,7 +26,7 @@ The membership type needs to have a relationship type selected on its settings p
 
 The settings page will warn you if your profile does not meet these requirements.
 
-*Usage*
+Usage
 ---------
 When you have a membership type with that has inheritance by relationship activated you have the concept of Primary
 member and Secondary members. The Primary member is the one that purchased the membership and is also the one who
