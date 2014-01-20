@@ -36,43 +36,34 @@ function groupmembership_civicrm_uninstall() {
  * Implementation of hook_civicrm_enable
  */
 function groupmembership_civicrm_enable() {
+  return _groupmembership_civix_civicrm_enable();
+}
 
-  // -----------------------------------------------------------------------------
-  // 1. Add a menu item to the Administer > CiviContribute menu
-
-  // check there is no admin item
-  $cdntax_search = array('url' => 'civicrm/cdntaxreceipts/settings?reset=1');
-  $cdntax_item = array();
-  CRM_Core_BAO_Navigation::retrieve($cdntax_search, $cdntax_item);
-
-  if ( ! empty($cdntax_item) ) {
-    return;
+function groupmembership_civicrm_navigationMenu(&$params) {
+  // get the maximum key of $params using method mentioned in discussion
+  // https://issues.civicrm.org/jira/browse/CRM-13803
+  $navId = CRM_Core_DAO::singleValueQuery("SELECT max(id) FROM civicrm_navigation");
+  if (is_integer($navId)) {
+    $navId++;
   }
-
-  // get path to Administer > CiviMember and place admin item there
-  $administer_search = array('label' => 'Administer');
-  $administer_item = array();
-  CRM_Core_BAO_Navigation::retrieve($administer_search, $administer_item);
-
-  if ($administer_item) {
-    $civimember_search = array('label' => 'CiviMember', 'parent_id' => $administer_item['id']);
-    $member_item = array();
-    CRM_Core_BAO_Navigation::retrieve($civimember_search, $member_item);
-
-    if ($member_item) {
-      $new_item = array(
-        'name' => 'Group_Membership_Settings',
-        'label' => 'Group Membership Settings',
-        'url' => 'civicrm/groupmembership/settings?reset=1',
-        'permission' => 'administer CiviCRM',
-        'parent_id' => $member_item['id'],
-        'is_active' => TRUE,
+  // Find the Memberships menu
+  foreach($params as $key => $value) {
+    if ('Memberships' == $value['attributes']['name']) {
+      $params[$key]['child'][$navId] = array (
+        'attributes' => array (
+          'label' => 'Group Membership Settings',
+          'name' => 'group membership settings',
+          'url' => 'civicrm/groupmembership/settings?reset=1',
+          'permission' => 'access CiviMember,administer CiviCRM',
+          'operator' => 'AND',
+          'separator' => null,
+          'parentID' => 28,
+          'navID' => $navId,
+          'active' => 1
+        )
       );
-      CRM_Core_BAO_Navigation::add($new_item);
     }
   }
-
-  return _groupmembership_civix_civicrm_enable();
 }
 
 /**
@@ -103,4 +94,50 @@ function groupmembership_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
  */
 function groupmembership_civicrm_managed(&$entities) {
   return _groupmembership_civix_civicrm_managed($entities);
+}
+
+/**
+ * Implementation of hook_civicrm_buildForm
+ *
+ * Generate a list of entities to create/deactivate/delete when this module
+ * is installed, disabled, uninstalled.
+ */
+function groupmembership_civicrm_buildForm($formName, &$form) {
+  $valid_forms = array(
+    'CRM_Profile_Form_Edit',
+    'CRM_Contribute_Form_Contribution_ThankYou',
+    'CRM_Contribute_Form_Contribution_Main',
+    // 'CRM_Contribute_Form_Contribution_Confirm',
+  );
+
+  if(array_search($formName, $valid_forms) === FALSE) {
+    return;
+  }
+
+  $session = CRM_Core_Session::singleton();
+  $contact_id = $session->get('userID');
+  $contact_id  = (isset($contact_id) && intval($contact_id) > 0) ? $contact_id : 0;
+  $settings = ca_freeform_groupmembership_getsettings();
+
+
+  // Family Member profile
+  if ($formName == 'CRM_Profile_Form_Edit') {
+    $gid = $form->getVar( '_gid' );
+    $valid_profiles = array();
+    foreach ($settings['general'] as $group) {
+      if ($group['group_member_profile']) {
+        $valid_profiles[] = $group['group_member_profile'];
+      }
+    }
+    if (array_search($gid,$valid_profiles) !== FALSE ) {
+      // Look for the submitter contact id and set it to the value passed or from the session
+      $submitter_contact_id = CRM_Utils_Array::value('scid', $_GET, $contact_id);
+      if ($submitter_contact_id > 0) {
+        if ($form->getAction() == CRM_Core_Action::ADD) {
+          $defaults['id'] = $submitter_contact_id;
+          $form->setDefaults($defaults);
+        }
+      }
+    }
+  }
 }

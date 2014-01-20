@@ -3,7 +3,7 @@
   <item>
     <path>civicrm/groupmembership/settings</path>
     <page_callback>CRM_Groupmembership_Form_GeneralSettings</page_callback>
-    <title>GeneralSettings</title>
+    <title>Group Membership Settings</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
 </menu>
