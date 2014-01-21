@@ -1,9 +1,15 @@
 <?xml version="1.0"?>
 <menu>
   <item>
-    <path>civicrm/groupmembership/settings</path>
+    <path>civicrm/groupmembership/generalsettings</path>
     <page_callback>CRM_Groupmembership_Form_GeneralSettings</page_callback>
-    <title>Group Membership Settings</title>
+    <title>Group Membership - General Settings</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/groupmembership/membersettings</path>
+    <page_callback>CRM_Groupmembership_Form_MemberSettings</page_callback>
+    <title>Group Membership - Member Settings</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
 </menu>
