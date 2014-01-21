@@ -51,26 +51,13 @@ function groupmembership_civicrm_navigationMenu(&$params) {
     if ('Memberships' == $value['attributes']['name']) {
       $params[$key]['child'][$navId] = array (
         'attributes' => array (
-          'label' => '',
-          'name' => 'group membership settings separator',
-          'url' => '',
-          'permission' => 'access CiviMember,administer CiviCRM',
-          'operator' => 'AND',
-          'separator' => 1,
-          'parentID' => $key,
-          'navID' => $navId,
-          'active' => 1
-        )
-      );
-      $navId++;
-      $params[$key]['child'][$navId] = array (
-        'attributes' => array (
           'label' => 'Group Membership - General Settings',
           'name' => 'group membership general settings',
           'url' => 'civicrm/groupmembership/generalsettings?reset=1',
           'permission' => 'access CiviMember,administer CiviCRM',
           'operator' => 'AND',
-          'separator' => null,
+          'separator' => 2,
+          //'separator' => null,
           'parentID' => $key,
           'navID' => $navId,
           'active' => 1
@@ -84,14 +71,13 @@ function groupmembership_civicrm_navigationMenu(&$params) {
           'url' => 'civicrm/groupmembership/membersettings?reset=1',
           'permission' => 'access CiviMember,administer CiviCRM',
           'operator' => 'AND',
-          'separator' => null,
+          'has_separator' => 0,
           'parentID' => $key,
           'navID' => $navId,
           'active' => 1
         )
       );
     }
-
   }
 }
 
@@ -171,23 +157,9 @@ function groupmembership_civicrm_buildForm($formName, &$form) {
   }
 }
 
-function groupmembership_civicrm_dashboard( $contactID, &$contentPlacement ) {
-  // REPLACE Activity Listing with custom content
-  $contentPlacement = CRM_Utils_Hook::DASHBOARD_BELOW;
-  return array( 'Custom Content' => "Here is some custom content: $contactID",
-    'Custom Table' => "
-<table>
-<tr><th>Contact Name</th><th>Date</th></tr>
-<tr><td>Foo</td><td>Bar</td></tr>
-<tr><td>Goo</td><td>Tar</td></tr>
-</table>
-",
-  );
-}
-
 function groupmembership_civicrm_pageRun(&$page) {
   if ( $page->getVar('_name') == 'CRM_Contact_Page_View_UserDashBoard' ) {
-    ca_freeform_groupmembership_contact_dashboard(&$page);
+    ca_freeform_groupmembership_contact_dashboard($page);
   }
 }
 

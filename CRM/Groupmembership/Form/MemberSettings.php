@@ -10,13 +10,12 @@ require_once 'CRM/Core/Form.php';
 class CRM_Groupmembership_Form_MemberSettings extends CRM_Core_Form {
   protected $_settings;
 
-  function preProcess() {
-    require_once 'groupmembership.inc';
-    $this->_settings = ca_freeform_groupmembership_getsettings();
-  }
-
   function buildQuickForm() {
     $defaults = array();
+
+    require_once 'groupmembership.inc';
+    $this->_settings = ca_freeform_groupmembership_getsettings();
+
     $membership_options = $this->getGroupMemberships();
     $profile_options = $this->getUnReservedProfiles();
     $relationship_options = $this->getRelationships();

@@ -3,23 +3,42 @@
  * Common functions for group membership
  */
 
-function ca_freeform_groupmembership_getsettings () {
+function ca_freeform_groupmembership_getsettings() {
   // TODO set this up on enable and upgrade if changed
   $settings = array(
     'version' => '0.5',
   );
   $general = CRM_Core_BAO_Setting::getItem('ca.freeform.groupmembership', 'general');
+  $members = CRM_Core_BAO_Setting::getItem('ca.freeform.groupmembership', 'members');
   $settings['general'] = isset($general) ? $general : array();
+  $settings['general'] = isset($members) ? $members : array();
 
   return $settings;
 }
 
-function ca_freeform_groupmembership_savesettings ($settings, $name = 'general') {
+function ca_freeform_groupmembership_savesettings($settings, $name = 'general') {
   $domain_id    = CRM_Core_Config::domainID();
   $result = CRM_Core_BAO_Setting::_setItem(array(), $settings[$name], 'ca.freeform.groupmembership', $name, $domain_id);
-
-
   return $settings;
+}
+
+function ca_freeform_groupmembership_deletesettings($group_name = 'all') {
+  $setting = new CRM_Core_BAO_Setting;
+  $setting->domain_id = CRM_Core_Config::domainID();
+  $setting->name = 'ca.freeform.groupmembership';
+  if ($group_name == 'all') {
+    foreach (array('general', 'members') as $sub_group) {
+      $setting->group_name = $sub_group;
+      $result = $setting->delete();
+      //dpm($result, 'delete multi result');
+    }
+  } else {
+    $setting->group_name = $group_name;
+    $result = $setting->delete();
+    //dpm($result, 'delete one result');
+  }
+  //dpm($result, 'final one result');
+  return $result;
 }
 
 /* To show the right renewal links on the dashboard */
